@@ -4,6 +4,7 @@ class UserController {
 
         this.formEl = document.getElementById(formId);
         this.tableEl = document.getElementById(tableId);
+        this.onSubmit();
 
     }
 
@@ -12,8 +13,8 @@ class UserController {
         this.formEl.addEventListener("submit", event  =>{
             event.preventDefault();
 
-            let user = this.getValues();
-            this.addLine(user, )
+            
+            this.addLine(this.getValues());
             
         });
 
@@ -22,7 +23,7 @@ class UserController {
     getValues() {
         let user = {};
 
-        this.formEl.elements.forEach(function (field, index) {
+        [...this.formEl.elements].forEach(function (field, index) {
 
             if (field.name == "gender") {
 
