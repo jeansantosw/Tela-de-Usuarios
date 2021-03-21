@@ -10,43 +10,49 @@ class UserController {
 
     onSubmit() {
 
-        this.formEl.addEventListener("submit", event  =>{
+        this.formEl.addEventListener("submit", event => {
             event.preventDefault();
 
-            let velues = this.getValues();
-          
-            this.getPhoto((content) =>{
+            let values = this.getValues();
 
-                velues.photo = content;
-                this.addLine(velues);
-
-
-            });   
-        });
-
-    }
-
-    getPhoto(callback) {
-        let fileReader = new FileReader();
-
-        let elements = [...this.formEl.elements].filter(item => {
-            if(item.name === "photo"){
-                return item;
+            this.getPhoto().then(
+                (content)=> {
+                    values.photo = content;
+                    this.addLine(values);
+            },
+                (e) => {
+                    console.error(e);
             }
+            );
         });
 
-        let file = elements[0].files[0];
-
-        fileReader.onload = () => {
-
-            callback(fileReader.result);
-
-        };
-
-        fileReader.readAsDataURL(file);
     }
+    getPhoto() {
+        return new Promise((resolve, reject) => {
+            let fileReader = new FileReader();
 
+            let elements = [...this.formEl.elements].filter(item => {
+                if (item.name === "photo") {
+                    return item;
+                }
+            });
 
+            let file = elements[0].files[0];
+
+            fileReader.onload = () => {
+
+                resolve(fileReader.result);
+
+            };
+
+            fileReader.onerror = (e) => {
+                reject(e);
+            }
+
+            fileReader.readAsDataURL(file);
+
+        });
+    }
 
     getValues() {
         let user = {};
@@ -79,8 +85,8 @@ class UserController {
     addLine(dataUser) {
 
         console.log(dataUser);
-    
-    
+
+
         this.tableEl.innerHTML = `
         
         <tr>
@@ -96,7 +102,7 @@ class UserController {
       </tr>
         
         `;
-    
+
     }
 
 
